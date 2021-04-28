@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,12 @@ public class UserServiceImp implements UserService {
 	@Autowired
 	private EmailService emailService;
 	
+	@Autowired
+	private TokenService tokenService;
+	
+	@Value("${verify.url}")
+	private String verifyUrl;
+	
 	@Override
 	public void register(UserDTO userDto) {
 		
@@ -37,13 +44,13 @@ public class UserServiceImp implements UserService {
 		BeanUtils.copyProperties(userDto, user);
 		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		User savedUser = userRepo.save(user);
-		String token = TokenService.createToken(savedUser.getId());
-		emailService.sendMail(savedUser.getEmail(), "verfiy email", "http://localhost:8080/user/verify/"+token);
+		String token = tokenService.createToken(savedUser.getId());
+		emailService.sendMail(savedUser.getEmail(), "verfiy email", verifyUrl+token);
 	}
 
 	@Override
 	public void verifyEmail(String token) {
-		Long id = TokenService.decodeToken(token);	
+		Long id = tokenService.decodeToken(token);	
 		User user = userRepo.findById(id).orElseThrow(() -> new FundooException(HttpStatus.NOT_FOUND.value(), "User Not Found"));
 		user.setIsVerified(true);
 		userRepo.save(user);

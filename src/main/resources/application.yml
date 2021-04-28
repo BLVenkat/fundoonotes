@@ -1,0 +1,26 @@
+spring:
+  profiles: development
+  datasource:
+    url: jdbc:mysql://${dbhost}:3306/${database}?useSSL=false
+    username: root
+    password: root
+server:
+  port: 8080
+---
+spring:
+  profiles: staging
+  datasource:
+    url: jdbc:mysql://${dbhost}:3306/${database}?useSSL=false
+    username: ${dbuser}
+    password: ${dbpassword}
+server:
+  port: 8080
+---
+spring:
+  profiles: production
+  datasource:
+    url: jdbc:mysql://${dbhost}:3306/${database}?useSSL=false
+    username: ${dbuser}
+    password: ${dbpassword}
+server:
+  port: 8080

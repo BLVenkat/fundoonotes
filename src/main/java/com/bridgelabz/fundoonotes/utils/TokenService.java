@@ -2,16 +2,21 @@ package com.bridgelabz.fundoonotes.utils;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+@Component
 public class TokenService {
 
-public static final String TOKEN_SECRET = "s4T2zOIWHMM1sxq";
+@Value("${secret.token}")
+public  String TOKEN_SECRET;
 	
-	public static String createToken(Long id)
+	public  String createToken(Long id)
 	{
 
 		
@@ -30,7 +35,7 @@ public static final String TOKEN_SECRET = "s4T2zOIWHMM1sxq";
 			}
 	
 	
-	public static Long decodeToken(String token)
+	public  Long decodeToken(String token)
 	{
 		try {
 		Claims claim =  Jwts.parser().setSigningKey(DatatypeConverter.parseString(TOKEN_SECRET)).parseClaimsJws(token).getBody();

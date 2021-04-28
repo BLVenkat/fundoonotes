@@ -14,4 +14,6 @@ public class Response {
 	private String statusMessage;
 	
 	private Object data;
+	
+	
 }
