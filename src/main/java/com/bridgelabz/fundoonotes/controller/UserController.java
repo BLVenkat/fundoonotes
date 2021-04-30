@@ -37,8 +37,8 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@PostMapping(value = "/register")
-	@ApiOperation(value = "register a user for fundonotes",consumes ="application/json",response = Response.class)
+	@PostMapping(value = "/register",consumes ="application/json")
+	@ApiOperation(value = "register a user for fundonotes",response = Response.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 201,message = "User registered Successfully"),
 			@ApiResponse(code = 401,message = "User not found")
