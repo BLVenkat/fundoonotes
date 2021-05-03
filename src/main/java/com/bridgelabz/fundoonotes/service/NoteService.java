@@ -14,4 +14,12 @@ public interface NoteService {
 	public Note getNote(String token,Long noteId);
 	
 	public Note changeColour(String token,Long noteId,String colour);
+	
+	public Note pinNote(String token,Long noteId);
+	
+	public Note archiveNote(String token,Long noteId);
+	
+	public Note trashNote(String token,Long noteId);
+
+	public void deleteNote(String token,Long noteId);
 }

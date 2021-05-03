@@ -2,12 +2,15 @@ package com.bridgelabz.fundoonotes.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,5 +69,36 @@ public class NoteController {
 		Note note = noteService.changeColour(token, noteId, colour);
 		
 		return new  ResponseEntity<Response> (new Response(HttpStatus.OK.value(), ApplicationConfig.getMessageAccessor().getMessage("203"), note),HttpStatus.OK);
+	}
+	
+	@PutMapping(value = {"/pin/{noteId}","/unpin/{noteId}"})
+	public ResponseEntity<Response> pinNote(@RequestHeader String token,@PathVariable Long noteId,HttpServletRequest request){
+		System.out.println(request.getRequestURI());
+		Note note = noteService.pinNote(token, noteId);
+		
+		return new ResponseEntity<Response>(new Response(HttpStatus.OK.value(), ApplicationConfig.getMessageAccessor().getMessage("204"), note),HttpStatus.OK);
+	}
+	
+	@PutMapping(value = {"/archive/{noteId}","/unarchive/{noteId}"})
+	public ResponseEntity<Response> archiveNote(@RequestHeader String token,@PathVariable Long noteId){
+		
+		Note note = noteService.archiveNote(token, noteId);
+		
+		return new ResponseEntity<Response>(new Response(HttpStatus.OK.value(), ApplicationConfig.getMessageAccessor().getMessage("204"), note),HttpStatus.OK);
+	}
+	
+	@PutMapping(value = {"/trash/{noteId}","/untrash/{noteId}"})
+	public ResponseEntity<Response> trashNote(@RequestHeader String token,@PathVariable Long noteId){
+		
+		Note note = noteService.trashNote(token, noteId);
+		
+		return new ResponseEntity<Response>(new Response(HttpStatus.OK.value(), ApplicationConfig.getMessageAccessor().getMessage("204"), note),HttpStatus.OK);
+	}
+	
+	@DeleteMapping(value = "/delete/{noteId}")
+	public ResponseEntity<Response> deleteNote(@RequestHeader String token,@PathVariable Long noteId){
+		
+		noteService.deleteNote(token, noteId);
+		return new ResponseEntity<Response>(new Response(HttpStatus.OK.value(),ApplicationConfig.getMessageAccessor().getMessage("205") , ""), HttpStatus.OK);
 	}
 }

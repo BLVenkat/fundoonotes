@@ -69,4 +69,49 @@ public class NoteServiceImp implements NoteService {
 						ApplicationConfig.getMessageAccessor().getMessage("2")));
 	}
 
+	@Override
+	public Note pinNote(String token, Long noteId) {
+		User user = getUser(tokenService.decodeToken(token));
+		Note note = getNote(user, noteId);
+		if(note.getPin().equals(true)) {
+			note.setPin(false);
+		}
+		else {
+			note.setPin(true);
+		}
+		
+		return	noteRepo.save(note);
+		
+	}
+
+	@Override
+	public Note archiveNote(String token, Long noteId) {
+		User user = getUser(tokenService.decodeToken(token));
+		Note note = getNote(user, noteId);
+		if(note.getArchive().equals(true))
+			note.setArchive(false);
+		else
+			note.setArchive(true);
+		return noteRepo.save(note);
+	}
+
+	@Override
+	public Note trashNote(String token, Long noteId) {
+		User user = getUser(tokenService.decodeToken(token));
+		Note note = getNote(user, noteId);
+		if(note.getTrash().equals(true))
+			note.setTrash(false);
+		else
+			note.setTrash(true);
+		return noteRepo.save(note);
+	}
+
+	@Override
+	
+	public void deleteNote(String token, Long noteId) {
+		User user = getUser(tokenService.decodeToken(token));
+		Note note = getNote(user, noteId);
+		 noteRepo.delete(note);
+	}
+
 }
