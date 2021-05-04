@@ -4,6 +4,12 @@ spring:
     url: jdbc:mysql://${dbhost}:3306/${database}?useSSL=false
     username: root
     password: root
+aws:
+  s3:
+    bucket: ${bucketname}
+    access: ${accesskey}
+    secret: ${secretkey}
+    region: ${region}
 server:
   port: 8080
 ---

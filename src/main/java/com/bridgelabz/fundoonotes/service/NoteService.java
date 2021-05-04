@@ -2,6 +2,8 @@ package com.bridgelabz.fundoonotes.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bridgelabz.fundoonotes.dto.NoteDto;
 import com.bridgelabz.fundoonotes.entity.Note;
 
@@ -22,4 +24,6 @@ public interface NoteService {
 	public Note trashNote(String token,Long noteId);
 
 	public void deleteNote(String token,Long noteId);
+	
+	public String addImage(String  token,Long noteId,MultipartFile file);
 }

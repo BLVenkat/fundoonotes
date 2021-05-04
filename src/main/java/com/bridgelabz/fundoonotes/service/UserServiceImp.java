@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundoonotes.configuration.ApplicationConfig;
 import com.bridgelabz.fundoonotes.dto.LoginDto;
@@ -16,6 +17,7 @@ import com.bridgelabz.fundoonotes.entity.User;
 import com.bridgelabz.fundoonotes.exception.FundooException;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.utils.EmailService;
+import com.bridgelabz.fundoonotes.utils.S3Service;
 import com.bridgelabz.fundoonotes.utils.TokenService;
 
 @Service
@@ -32,6 +34,9 @@ public class UserServiceImp implements UserService {
 
 	@Autowired
 	private TokenService tokenService;
+	
+	@Autowired
+	private S3Service s3Service;
 
 	@Value("${verify.url}")
 	private String baseUrl;
@@ -94,6 +99,15 @@ public class UserServiceImp implements UserService {
 	
 	user.setPassword(passwordEncoder.encode(password));
 	userRepo.save(user);
+	}
+
+	@Override
+	public String uploadProfileImage(String token, MultipartFile file) {
+		User user = userRepo.findById(tokenService.decodeToken(token)).orElseThrow(() -> new FundooException(HttpStatus.NOT_FOUND.value(), ApplicationConfig.getMessageAccessor().getMessage("1")));
+		String key = s3Service.fileUpload(file, "profile_Images", user.getId().toString());
+		user.setProfileUrl(key);
+		userRepo.save(user);
+		return key;
 	}
 
 }

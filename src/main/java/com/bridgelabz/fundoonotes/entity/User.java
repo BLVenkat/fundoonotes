@@ -39,6 +39,8 @@ public class User {
 	
 	private Boolean isVerified;
 	
+	private String profileUrl;
+	
 	@CreationTimestamp
 	private LocalDateTime createdTimeStamp;
 	
