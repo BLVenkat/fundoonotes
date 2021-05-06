@@ -1,9 +1,11 @@
 package com.bridgelabz.fundoonotes.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,7 +19,12 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Note {
+public class Note implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 64425443706094061L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,7 +50,7 @@ public class Note {
 	@UpdateTimestamp
 	private LocalDateTime updatedTimeStamp;
 	
-	@OneToMany(targetEntity = NoteImage.class)
+	@OneToMany(targetEntity = NoteImage.class,fetch = FetchType.EAGER)
 	@JoinColumn(name="note_id")
 	private List<NoteImage> images;
 	

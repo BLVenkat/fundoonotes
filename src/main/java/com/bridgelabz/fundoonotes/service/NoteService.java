@@ -9,7 +9,7 @@ import com.bridgelabz.fundoonotes.entity.Note;
 
 public interface NoteService {
 
-	public void createNote(String token,NoteDto noteDto);
+	public Note createNote(String token,NoteDto noteDto);
 	
 	public List<Note> getAllNotes(String token);
 	

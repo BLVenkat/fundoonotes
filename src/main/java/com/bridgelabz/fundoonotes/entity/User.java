@@ -1,9 +1,11 @@
 package com.bridgelabz.fundoonotes.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,7 +23,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+public class User implements Serializable  {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4809260810214708022L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,7 +54,7 @@ public class User {
 	@UpdateTimestamp
 	private LocalDateTime updateTimeStamp;
 	
-	@OneToMany(targetEntity = Note.class)
+	@OneToMany(targetEntity = Note.class,fetch = FetchType.EAGER)
 	@JoinColumn(name ="user_id")
 	private List<Note> notes;
 	

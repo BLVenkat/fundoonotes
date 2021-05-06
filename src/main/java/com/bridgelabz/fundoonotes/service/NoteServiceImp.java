@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,17 +38,22 @@ public class NoteServiceImp implements NoteService {
 	@Autowired
 	private S3Service s3Service;
 	
+	
 	@Autowired
 	private NoteImageRespository noteImageRepo;
 
 	@Override
-	public void createNote(String token, NoteDto noteDto) {
+	@CachePut("notes")
+	public Note createNote(String token, NoteDto noteDto) {
 		User user = getUser(tokenService.decodeToken(token));
 		Note note = new Note();
 		// can use modelmapper also
 		BeanUtils.copyProperties(noteDto, note);
-		user.getNotes().add(noteRepo.save(note));
-		userRepo.save(user);
+		List<Note> notes = user.getNotes();
+		Note savedNote = noteRepo.save(note);
+		notes.add(savedNote);
+		 userRepo.save(user);
+		 return savedNote;
 	}
 
 	public User getUser(Long id) {
@@ -54,6 +62,8 @@ public class NoteServiceImp implements NoteService {
 	}
 
 	@Override
+	//@CachePut("notes")
+	@Cacheable("notes")
 	public List<Note> getAllNotes(String token) {
 		User user = getUser(tokenService.decodeToken(token));
 		return user.getNotes();
@@ -136,5 +146,5 @@ public class NoteServiceImp implements NoteService {
 		noteRepo.save(note);
 		return key;
 	}
-
+	
 }

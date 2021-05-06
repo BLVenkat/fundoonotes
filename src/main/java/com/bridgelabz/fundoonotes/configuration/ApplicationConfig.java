@@ -33,6 +33,8 @@ public class ApplicationConfig {
 	public static MessageSourceAccessor getMessageAccessor() {
 		return messageSourceAccessor;
 	}
+	
+	
 
 
 
