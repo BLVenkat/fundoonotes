@@ -19,6 +19,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Response> handleException(Exception ex) {
+		ex.printStackTrace();
 		Response error = new Response(HttpStatus.BAD_GATEWAY.value(), ex.getMessage(), null);
 		return new ResponseEntity<Response>(error, HttpStatus.BAD_GATEWAY);
 	}

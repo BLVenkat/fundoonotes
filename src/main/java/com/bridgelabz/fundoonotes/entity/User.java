@@ -58,4 +58,8 @@ public class User implements Serializable  {
 	@JoinColumn(name ="user_id")
 	private List<Note> notes;
 	
+	@OneToMany(targetEntity = Label.class)
+	@JoinColumn(name = "user_id")
+	private List<Label> labels;
+	
 }

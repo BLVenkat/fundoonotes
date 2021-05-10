@@ -67,9 +67,9 @@ public class NoteController {
 	@PutMapping(value = "/colour/{noteId}")
 	public ResponseEntity<Response> changeColour( @RequestHeader String token,@PathVariable Long noteId,@RequestParam String colour){
 		
-		Note note = noteService.changeColour(token, noteId, colour);
+		noteService.changeColour(token, noteId, colour);
 		
-		return new  ResponseEntity<Response> (new Response(HttpStatus.OK.value(), ApplicationConfig.getMessageAccessor().getMessage("203"), note),HttpStatus.OK);
+		return new  ResponseEntity<Response> (new Response(HttpStatus.OK.value(), ApplicationConfig.getMessageAccessor().getMessage("203"), ""),HttpStatus.OK);
 	}
 	
 	@PutMapping(value = {"/pin/{noteId}","/unpin/{noteId}"})

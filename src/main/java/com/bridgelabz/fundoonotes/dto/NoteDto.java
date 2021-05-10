@@ -1,11 +1,18 @@
 package com.bridgelabz.fundoonotes.dto;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
 
 @Data
-public class NoteDto {
+public class NoteDto implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8904421990863760726L;
 
 	@NotBlank(message = "title cannnot be blank")
 	private String title;

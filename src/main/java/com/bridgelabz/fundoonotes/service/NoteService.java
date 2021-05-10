@@ -15,7 +15,7 @@ public interface NoteService {
 	
 	public Note getNote(String token,Long noteId);
 	
-	public Note changeColour(String token,Long noteId,String colour);
+	public Note	 changeColour(String token,Long noteId,String colour);
 	
 	public Note pinNote(String token,Long noteId);
 	
