@@ -12,11 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundoonotes.configuration.ApplicationConfig;
 import com.bridgelabz.fundoonotes.dto.LoginDto;
+import com.bridgelabz.fundoonotes.dto.Mail;
 import com.bridgelabz.fundoonotes.dto.UserDTO;
 import com.bridgelabz.fundoonotes.entity.User;
 import com.bridgelabz.fundoonotes.exception.FundooException;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.utils.EmailService;
+import com.bridgelabz.fundoonotes.utils.Producer;
 import com.bridgelabz.fundoonotes.utils.S3Service;
 import com.bridgelabz.fundoonotes.utils.TokenService;
 
@@ -34,12 +36,15 @@ public class UserServiceImp implements UserService {
 
 	@Autowired
 	private TokenService tokenService;
-	
+
 	@Autowired
 	private S3Service s3Service;
 
 	@Value("${verify.url}")
 	private String baseUrl;
+	
+	@Autowired
+	private Producer producer;
 
 	@Override
 	public void register(UserDTO userDto) {
@@ -52,7 +57,11 @@ public class UserServiceImp implements UserService {
 		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		User savedUser = userRepo.save(user);
 		String token = tokenService.createToken(savedUser.getId());
-		emailService.sendMail(savedUser.getEmail(), "verfiy email", baseUrl+"user/verify/" + token);
+		Mail mail = new Mail(savedUser.getEmail(), "verfiy email", baseUrl + "user/verify/" + token, "venky70662@gmail.com");
+		
+		producer.sendMessage(mail);
+		
+		//emailService.sendMail(mail);
 	}
 
 	@Override
@@ -82,28 +91,31 @@ public class UserServiceImp implements UserService {
 	@Override
 	public void forgotPassword(String email) {
 		User user = getUser(email);
-		emailService.sendMail(user.getEmail(), "Reset Link",baseUrl+"/resetpassword/"+tokenService.createToken(user.getId()));
+//		emailService.sendMail(user.getEmail(), "Reset Link",
+//				baseUrl + "/resetpassword/" + tokenService.createToken(user.getId()));
 	}
-	
+
 	public User getUser(String email) {
-		return userRepo.findByEmail(email)
-				.orElseThrow(() -> new FundooException(HttpStatus.NOT_FOUND.value(),
-						ApplicationConfig.getMessageAccessor().getMessage("1")));
+		return userRepo.findByEmail(email).orElseThrow(() -> new FundooException(HttpStatus.NOT_FOUND.value(),
+				ApplicationConfig.getMessageAccessor().getMessage("1")));
 
 	}
 
 	@Override
 	public void resetPassword(String token, String password) {
-	User user = userRepo.findById(tokenService.decodeToken(token)).orElseThrow(() -> new FundooException(HttpStatus.NOT_FOUND.value(),
-				ApplicationConfig.getMessageAccessor().getMessage("1")));
-	
-	user.setPassword(passwordEncoder.encode(password));
-	userRepo.save(user);
+		User user = userRepo.findById(tokenService.decodeToken(token))
+				.orElseThrow(() -> new FundooException(HttpStatus.NOT_FOUND.value(),
+						ApplicationConfig.getMessageAccessor().getMessage("1")));
+
+		user.setPassword(passwordEncoder.encode(password));
+		userRepo.save(user);
 	}
 
 	@Override
 	public String uploadProfileImage(String token, MultipartFile file) {
-		User user = userRepo.findById(tokenService.decodeToken(token)).orElseThrow(() -> new FundooException(HttpStatus.NOT_FOUND.value(), ApplicationConfig.getMessageAccessor().getMessage("1")));
+		User user = userRepo.findById(tokenService.decodeToken(token))
+				.orElseThrow(() -> new FundooException(HttpStatus.NOT_FOUND.value(),
+						ApplicationConfig.getMessageAccessor().getMessage("1")));
 		String key = s3Service.fileUpload(file, "profile_Images", user.getId().toString());
 		user.setProfileUrl(key);
 		userRepo.save(user);

@@ -22,6 +22,8 @@ import com.bridgelabz.fundoonotes.repository.NoteRepository;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.utils.S3Service;
 import com.bridgelabz.fundoonotes.utils.TokenService;
+import com.hazelcast.query.PredicateBuilder.EntryObject;
+import com.hazelcast.query.Predicates;
 
 @Service
 public class NoteServiceImp implements NoteService {
@@ -47,6 +49,9 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	//@CachePut(value = "notes",key="#token")
 	public Note createNote(String token, NoteDto noteDto) {
+		EntryObject e = Predicates.newPredicateBuilder().getEntryObject();
+
+		//cacheMap.
 		Long userId = tokenService.decodeToken(token);
 		User user = getUser(userId);
 		Note note = new Note();

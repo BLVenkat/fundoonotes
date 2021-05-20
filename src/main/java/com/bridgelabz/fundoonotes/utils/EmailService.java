@@ -5,19 +5,21 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import com.bridgelabz.fundoonotes.dto.Mail;
+
 @Component
 public class EmailService {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
 	
-	public boolean sendMail(String to,String subject, String context) {
+	public boolean sendMail(Mail mailData) {
 		try {
 		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setSubject(subject);
-		mail.setText(context);
-		mail.setTo(to);
-        mail.setFrom("venky70662@gmail.com");
+		mail.setSubject(mailData.getSubject());
+		mail.setText(mailData.getContext());
+		mail.setTo(mailData.getTo());
+        mail.setFrom(mailData.getFrom());
 		javaMailSender.send(mail);
 		return true;
 		}catch (Exception e) {

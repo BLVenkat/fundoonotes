@@ -20,10 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundoonotes.configuration.ApplicationConfig;
 import com.bridgelabz.fundoonotes.dto.LoginDto;
-import com.bridgelabz.fundoonotes.dto.PasswordDto;
 import com.bridgelabz.fundoonotes.dto.UserDTO;
 import com.bridgelabz.fundoonotes.response.Response;
 import com.bridgelabz.fundoonotes.service.UserService;
+import com.bridgelabz.fundoonotes.utils.Producer;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +38,10 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private Producer producer;
+	
+		
 	@PostMapping(value = "/register",consumes ="application/json")
 	@ApiOperation(value = "register a user for fundonotes",response = Response.class)
 	@ApiResponses(value = {
@@ -90,4 +94,11 @@ public class UserController {
 		
 		return new ResponseEntity<Response>(new Response(HttpStatus.OK.value(), ApplicationConfig.getMessageAccessor().getMessage("105"), key),HttpStatus.OK); 
 	}
+	
+	@GetMapping("/send")
+	public String sendMessage(@RequestParam String message) {
+		//producer.sendMessage(message);
+		return "send successfully";
+	}
+	
 }

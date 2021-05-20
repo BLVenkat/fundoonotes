@@ -4,6 +4,17 @@ spring:
     url: jdbc:mysql://${dbhost}:3306/${database}?useSSL=false
     username: root
     password: root
+#  kafka:
+#    consumer:
+#      bootstrap-servers: localhost:9092
+#      group-id: group-id
+#      auto-offset-reset: earliest
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#    producer:
+#      bootstrap-servers: localhost:9092
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer        
 aws:
   s3:
     bucket: ${bucketname}
@@ -12,7 +23,7 @@ aws:
     region: ${region}
 server:
   port: 8080
-
+  
 ---
 spring:
   profiles: staging
